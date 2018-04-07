@@ -1,0 +1,16 @@
+{
+    "presets": [
+      "env",
+      "react"
+    ],
+    "env": {
+      "development": {
+        "sourceMaps": "inline"
+      }
+    },
+    "plugins": [
+      "transform-async-to-generator",
+      "transform-object-rest-spread",
+      "transform-runtime"
+    ]
+  }
