@@ -57,3 +57,14 @@ typings/
 # dotenv environment variables file
 .env
 
+# For Module
+build
+/lib
+.DS_Store
+
+# Editor
+.idea
+
+# Test
+coverage
+.nyc_output
