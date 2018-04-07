@@ -3,6 +3,10 @@
   "version": "0.1.1",
   "description": "This component library is possible to acquire asynchronous data before rendering. this is like next.js.",
   "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oneut/next-props.git"
+  },
   "files": [
     "lib"
   ],
@@ -29,5 +33,7 @@
     "prepare": "npm run build",
     "test": "nyc ava --verbose",
     "report": "nyc report --reporter=html"
-  }
+  },
+  "author": "onetu",
+  "license": "MIT"
 }
