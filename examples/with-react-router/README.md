@@ -1,4 +1,4 @@
-# Basic Example
+# Next Props With React Router Example
 
 This project template was built with Create React App.
 
