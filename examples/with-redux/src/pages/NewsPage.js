@@ -39,7 +39,7 @@ export default class NewsPage extends React.Component {
     render() {
         if (!this.props.items.length) return (<NotFoundPage/>);
 
-        // Asynchronous!
+        // Before binding store!
         this.store.dispatch(ItemsAction.sync(this.props.items));
 
         return (
