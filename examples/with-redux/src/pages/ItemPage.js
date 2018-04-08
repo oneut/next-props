@@ -31,7 +31,7 @@ export default class ItemPage extends React.Component {
     render() {
         if (!this.props.item) return (<NotFoundPage/>);
 
-        // Asynchronous!
+        // Before binding store!
         this.store.dispatch(ItemAction.newInstance(this.props.item));
 
         return (

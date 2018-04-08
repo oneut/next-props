@@ -29,11 +29,7 @@ export default class IndexPage extends React.Component {
     }
 
     render() {
-        if (!this.props.items) {
-            return null;
-        }
-
-        // Asynchronous!
+        // Before binding store!
         this.store.dispatch(ItemsAction.sync(this.props.items));
 
         return (

@@ -31,7 +31,7 @@ export default class UserPage extends React.Component {
     render() {
         if (!this.props.user) return (<NotFoundPage/>);
 
-        // Asynchronous!
+        // Before binding store!
         this.store.dispatch(UserAction.newInstance(this.props.user));
 
         return (
