@@ -107,7 +107,7 @@ async/await is not supported.
 ```javascript
 class HomeComponent extends React.Component {
     initialPropsDidGet() {
-        console.log("before `getInitialProps()`");
+        console.log("after `getInitialProps()`");
     }
 }
 ```
