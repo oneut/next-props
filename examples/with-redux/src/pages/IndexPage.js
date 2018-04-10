@@ -5,8 +5,9 @@ import {Provider} from "react-redux";
 import indexRootReducer from "../rootReducers/index";
 import IndexContainer from "../containers/IndexContainer";
 import HackerNewsApi from "../api/HackerNewsApi";
-import NotFoundPage from "./NotFoundPage";
 import ItemsAction from "../actions/ItemsAction";
+
+const store = createStore(indexRootReducer);
 
 export default class IndexPage extends React.Component {
     static initialPropsWillGet() {
@@ -19,21 +20,14 @@ export default class IndexPage extends React.Component {
         };
     }
 
-    static initialPropsDidGet() {
+    static initialPropsDidGet(props) {
+        store.dispatch(ItemsAction.sync(props.items));
         NProgress.done();
     }
 
-    constructor(props) {
-        super(props);
-        this.store = createStore(indexRootReducer);
-    }
-
     render() {
-        // Before binding store!
-        this.store.dispatch(ItemsAction.sync(this.props.items));
-
         return (
-            <Provider store={this.store}>
+            <Provider store={store}>
                 <IndexContainer/>
             </Provider>
         );
