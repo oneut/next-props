@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class AsyncReactPager extends React.Component {
+export default class NextProps extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -27,23 +27,15 @@ export default class AsyncReactPager extends React.Component {
         return !nextState.isSyncing;
     }
 
-    componentDidMount() {
-        this.fireInitialPropsDidGet();
-    }
-
-    componentDidUpdate() {
-        this.fireInitialPropsDidGet();
-    }
-
     fireInitialPropsWillGet() {
         if (this.isFunction(this.props.component.initialPropsWillGet)) {
             this.props.component.initialPropsWillGet(this.props);
         }
     }
 
-    fireInitialPropsDidGet() {
+    fireInitialPropsDidGet(initialProps) {
         if (this.isFunction(this.props.component.initialPropsDidGet)) {
-            const props = {...this.props, ...this.state.initialProps};
+            const props = {...this.props, ...initialProps};
             this.props.component.initialPropsDidGet(props);
         }
     }
@@ -76,7 +68,7 @@ export default class AsyncReactPager extends React.Component {
     }
 
     setInitialProps(initialProps) {
-        this.fireInitialPropsDidGet();
+        this.fireInitialPropsDidGet(initialProps);
         this.setState({
             initialProps: initialProps,
             isSyncing: false
@@ -89,8 +81,12 @@ export default class AsyncReactPager extends React.Component {
     }
 
     render() {
-        if (this.state.isSyncing && !!this.constructor.firstRender) {
-            return this.constructor.firstRender();
+        if (this.state.isSyncing) {
+            if (!!this.constructor.firstRender) {
+                return this.constructor.firstRender();
+            }
+
+            return null;
         }
 
         const props = {...this.props, ...this.state.initialProps};
