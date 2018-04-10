@@ -8,6 +8,8 @@ import HackerNewsApi from "../api/HackerNewsApi";
 import NotFoundPage from "./NotFoundPage";
 import UserAction from "../actions/UserAction";
 
+const store = createStore(userRootReducer);
+
 export default class UserPage extends React.Component {
     static initialPropsWillGet() {
         NProgress.start();
@@ -19,23 +21,16 @@ export default class UserPage extends React.Component {
         };
     }
 
-    static initialPropsDidGet() {
+    static initialPropsDidGet(props) {
+        store.dispatch(UserAction.newInstance(props.user));
         NProgress.done();
-    }
-
-    constructor(props) {
-        super(props);
-        this.store = createStore(userRootReducer);
     }
 
     render() {
         if (!this.props.user) return (<NotFoundPage/>);
 
-        // Before binding store!
-        this.store.dispatch(UserAction.newInstance(this.props.user));
-
         return (
-            <Provider store={this.store}>
+            <Provider store={store}>
                 <UserContainer match={this.props.match}/>
             </Provider>
         );

@@ -8,6 +8,8 @@ import HackerNewsApi from "../api/HackerNewsApi";
 import NotFoundPage from "./NotFoundPage";
 import ItemAction from "../actions/ItemAction";
 
+const store = createStore(itemRootReducer);
+
 export default class ItemPage extends React.Component {
     static initialPropsWillGet() {
         NProgress.start();
@@ -19,23 +21,16 @@ export default class ItemPage extends React.Component {
         };
     }
 
-    static initialPropsDidGet() {
+    static initialPropsDidGet(props) {
+        store.dispatch(ItemAction.newInstance(props.item));
         NProgress.done();
-    }
-
-    constructor(props) {
-        super(props);
-        this.store = createStore(itemRootReducer);
     }
 
     render() {
         if (!this.props.item) return (<NotFoundPage/>);
 
-        // Before binding store!
-        this.store.dispatch(ItemAction.newInstance(this.props.item));
-
         return (
-            <Provider store={this.store}>
+            <Provider store={store}>
                 <ItemContainer />
             </Provider>
         );
