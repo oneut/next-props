@@ -9,14 +9,26 @@ import { Subject } from "rxjs";
 // Set RxJS
 const stream = new Subject();
 
-NextProps.streamer = (load, setInitialProps) => {
-    stream
-        .switchMap(load)
-        .subscribe(setInitialProps);
-}
+class NextPropsWrapper extends React.Component {
+    streamer(load, setInitialProps) {
+        stream
+            .switchMap(load)
+            .subscribe(setInitialProps);
+    }
 
-NextProps.fireStreamer = () => {
-    stream.next();
+    fireStreamer() {
+        stream.next();
+    }
+
+    render() {
+        return (
+            <NextProps
+                streamer={this.streamer.bind(this)}
+                fireStreamer={this.fireStreamer.bind(this)}
+                {...this.props}
+            />
+        );
+    }
 }
 
 // Sleep
@@ -152,9 +164,9 @@ render(
     (
         <HashRouter>
             <Switch>
-                <Route path="/" exact render={(props) => <NextProps {...props} component={Home} />} />
-                <Route path="/page" exact render={(props) => <NextProps {...props} component={PageIndex} />} />
-                <Route path="/page/:pageId" exact render={(props) => <NextProps {...props} component={Page} />} />
+                <Route path="/" exact render={(props) => <NextPropsWrapper {...props} component={Home} />} />
+                <Route path="/page" exact render={(props) => <NextPropsWrapper {...props} component={PageIndex} />} />
+                <Route path="/page/:pageId" exact render={(props) => <NextPropsWrapper {...props} component={Page} />} />
             </Switch>
         </HashRouter>
     ),
