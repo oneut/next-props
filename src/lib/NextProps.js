@@ -9,9 +9,8 @@ export default class NextProps extends React.Component {
         };
 
         // init stream
-        if (!!this.constructor.streamer) {
-            this.constructor.streamer(this.load.bind(this), this.setInitialProps.bind(this));
-            this.state.hasStream = true;
+        if (!!this.hasStreamer()) {
+            this.props.streamer(this.load.bind(this), this.setInitialProps.bind(this));
         }
     }
 
@@ -24,7 +23,7 @@ export default class NextProps extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !nextState.isSyncing;
+        return !(nextState.isSyncing);
     }
 
     fireInitialPropsWillGet() {
@@ -42,11 +41,8 @@ export default class NextProps extends React.Component {
 
     sync() {
         this.setState({isSyncing: true}, () => {
-            if (this.state.hasStream) {
-                if (!this.constructor.fireStreamer) {
-                    throw Error(`AsyncComponent.fireStreamer is required when AsyncComponent.streamer exists.`);
-                }
-                this.constructor.fireStreamer();
+            if (this.hasStreamer()) {
+                this.fireStreamer();
                 return;
             }
             this.fire();
@@ -56,6 +52,13 @@ export default class NextProps extends React.Component {
     async fire() {
         const initialProps = await this.load();
         this.setInitialProps(initialProps);
+    }
+
+    fireStreamer() {
+        if (!this.props.fireStreamer) {
+            throw Error(`props.fireStreamer is required when props.streamer exists.`);
+        }
+        this.props.fireStreamer();
     }
 
     async load() {
@@ -80,16 +83,29 @@ export default class NextProps extends React.Component {
         return false;
     }
 
+    hasStreamer() {
+        return !!this.props.streamer;
+    }
+
     render() {
         if (this.state.isSyncing) {
-            if (!!this.constructor.firstRender) {
-                return this.constructor.firstRender();
-            }
-
+            this.firstRender();
             return null;
         }
 
         const props = {...this.props, ...this.state.initialProps};
         return <this.props.component {...props}/>;
+    }
+
+    firstRender() {
+        if (!(this.props.firstRender)) {
+            return null;
+        }
+
+        if (this.isFunction(this.props.firstRender())) {
+            return this.props.firstRender();
+        }
+
+        return this.props.firstRender;
     }
 }
