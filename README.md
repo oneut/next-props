@@ -70,6 +70,57 @@ You specify the component you want to get data asynchronously.
 <NextProps component={HomeComponent}/>
 ```
 
+### props.streamer((load, setInitialProps) => any)
+
+You can use this hook api to control the asynchronous order.
+The example is RxJS.
+
+```javascript
+// Set RxJS
+import { Subject } from "rxjs";
+const stream = new Subject();
+
+const streamer = (load, setInitialProps) => {
+     stream
+         .switchMap(load)
+         .subscribe(setInitialProps);
+ };
+
+<NextProps component={HomeComponent} streamer={streamer} fireStreamer={fireStreamer}/>
+```
+
+`load` is Promise to handle `getInitialProps(props)`.  
+`setInitialProps` set the data acquired by `load` as initialProps.
+
+### props.fireStreamer(() => any)
+
+Setting `props.streamer` makes it `Observable`, so you also need to set fire.
+
+```javascript
+const fireStreamer = () => {
+    stream.next();
+};
+
+<NextProps component={HomeComponent} streamer={streamer} fireStreamer={fireStreamer}/>
+```
+
+### props.firstRender(() => any)
+
+Rendering does not stop even if it is asynchronous.
+Please use this function if you want to make it a specific view during initial rendering.
+
+```javascript
+const firstRender = () => {
+  return (
+      <div className="text-center" style={{margin: "100px 0"}}>
+          <i className="fa fa-cog fa-spin fa-5x fa-fw"/>
+      </div>
+  );
+};
+
+<NextProps component={HomeComponent} firstRender={firstRender}/>
+```
+
 ## Function in props.component of NextProps
 ### component.getInitialProps(props)
 
@@ -110,50 +161,4 @@ class HomeComponent extends React.Component {
         console.log("after `getInitialProps()`");
     }
 }
-```
-
-## NextProps Hook API
-### NextProps.streamer((load, setInitialProps) => any)
-
-You can use this hook api to control the asynchronous order.
-The example is RxJS.
-
-```javascript
-// Set RxJS
-import { Subject } from "rxjs";
-const stream = new Subject();
-
-NextProps.streamer = (load, setInitialProps) => {
-    stream
-        .switchMap(load)
-        .subscribe(setInitialProps);
-};
-```
-
-`load` is Promise to handle `getInitialProps(props)`.  
-`setInitialProps` set the data acquired by `load` as initialProps.
-
-### NextProps.fireStreamer(() => any)
-
-Setting `NextProps.streamer` makes it `Observable`, so you also need to set fire.
-
-```javascript
-NextProps.fireStreamer = () => {
-    stream.next();
-};
-```
-
-### NextProps.firstRender(() => any)
-
-Rendering does not stop even if it is asynchronous.
-Please use this function if you want to make it a specific view during initial rendering.
-
-```javascript
-NextProps.firstRender = () => {
-  return (
-      <div className="text-center" style={{margin: "100px 0"}}>
-          <i className="fa fa-cog fa-spin fa-5x fa-fw"/>
-      </div>
-  );
-};
 ```
