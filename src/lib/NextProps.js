@@ -89,8 +89,7 @@ export default class NextProps extends React.Component {
 
     render() {
         if (this.state.isSyncing) {
-            this.firstRender();
-            return null;
+            return this.firstRender();
         }
 
         const props = {...this.props, ...this.state.initialProps};
@@ -102,7 +101,7 @@ export default class NextProps extends React.Component {
             return null;
         }
 
-        if (this.isFunction(this.props.firstRender())) {
+        if (this.isFunction(this.props.firstRender)) {
             return this.props.firstRender();
         }
 
