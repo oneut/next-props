@@ -9,7 +9,7 @@ export default class NextProps extends React.Component {
         };
 
         // init stream
-        if (!!this.hasStreamer()) {
+        if (this.hasStreamer()) {
             this.props.streamer(this.load.bind(this), this.setInitialProps.bind(this));
         }
     }
@@ -55,7 +55,7 @@ export default class NextProps extends React.Component {
     }
 
     fireStreamer() {
-        if (!this.props.fireStreamer) {
+        if (!(this.props.fireStreamer)) {
             throw Error(`props.fireStreamer is required when props.streamer exists.`);
         }
         this.props.fireStreamer();
